@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/de10rs">
+        <file>de10 resource/A.png</file>
+        <file>de10 resource/B.png</file>
+        <file>de10 resource/Board_Layout.png</file>
+        <file>de10 resource/Board_Slide.png</file>
+        <file>de10 resource/Board_Slide.pptx</file>
+        <file>de10 resource/C.png</file>
+        <file>de10 resource/D.png</file>
+        <file>de10 resource/DE1SoC.png</file>
+        <file>de10 resource/E.png</file>
+        <file>de10 resource/F.png</file>
+        <file>de10 resource/G.png</file>
+        <file>de10 resource/H.png</file>
+        <file>de10 resource/Layout.png</file>
+        <file>de10 resource/LEDG.png</file>
+        <file>de10 resource/LEDR.png</file>
+        <file>de10 resource/PB.png</file>
+        <file>de10 resource/SW.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>de10 resource/InverseSW.png</file>
+        <file>de10 resource/clear.png</file>
+        <file>de10 resource/DE10Lite.png</file>
+        <file>de10 resource/led.png</file>
+    </qresource>
+</RCC>

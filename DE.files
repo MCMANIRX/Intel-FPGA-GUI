@@ -1,0 +1,31 @@
+DE10LITE.pro
+DE10LITE.pro.qtds
+DE10Resources.qrc
+constants.h
+de10 resource/Board_Layout.png
+de10 resource/Board_Slide.png
+de10 resource/Board_Slide.pptx
+de10 resource/DE10Lite.png
+de10 resource/DE1SoC.png
+de10 resource/InverseSW.png
+de10 resource/LEDG.png
+de10 resource/LEDR.png
+de10 resource/Layout.png
+de10 resource/PB.png
+de10 resource/SW.png
+de10 resource/a.png
+de10 resource/b.png
+de10 resource/c.png
+de10 resource/circle.png
+de10 resource/clear.png
+de10 resource/d.png
+de10 resource/e.png
+de10 resource/f.png
+de10 resource/g.png
+de10 resource/h.png
+de10 resource/led.png
+main.cpp
+mainwindow.cpp
+mainwindow.h
+mainwindow.ui
+translations.db
