@@ -24,13 +24,20 @@ using namespace std;
 */
 
 bool segmentHasDecimalPoint =false;
-bool sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS] = {};
+bool sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS] = {0};
 bool sevensegmentDec[NUMSEVENSEGMENT][NUMSEVENSEGPARTSDEC] = {};
 bool switchStates[NUMSWITCHES] = {};
 bool ledStates[NUMLEDS] = {};
 
-//Initializes values for all control and visual states
+
 void initControls(){
+
+    qDebug() << "\n" << "hello" << "\n";
+      int nb;
+      qDebug() << "Enter a number " << "\n";
+      cin>>nb;
+      qDebug() << "Your number is "<< nb<< "\n";
+
     for (int i =0;i<NUMSWITCHES-1;i++) {
         switchStates[i]=true;
     }
@@ -42,11 +49,12 @@ void initControls(){
     for (int i = 0;i<NUMSEVENSEGMENT;i++) {
         for (int j = 0;j<NUMSEVENSEGPARTSDEC;j++) {
             sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTSDEC] = true;
-            //cout << "" << sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS];
+            //qDebug() << "" << sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS];
         }
     }
 
 }
+
 //Methods that get the values of all stored states
 bool* getSwitchStates(){
     return switchStates;
@@ -86,35 +94,104 @@ void updateLEDs(bool newLEDStates[]){
 }
 
 //update sevensegment display with binary string, has if statements to account for decimal point usage
-void updateSevenSeg(string binaryStr){
-    cout << binaryStr << "\n";
+void MainWindow::updateSevenSeg(string binaryStr){
+    int k = 0;
+    qDebug() << binaryStr.c_str();
     if (segmentHasDecimalPoint) {
-        cout << "Decimal Point found, 48 bits expected (all used) \n";
-        int k = 0;
-        for (int i = 0;i<NUMSEVENSEGMENT-1;i++) {
-            for (int j = 0;j<NUMSEVENSEGPARTSDEC-1;j++) {
+        qDebug() << "Decimal Point found, 48 bits expected (all used) \n";
+         k = 0;
+        for (int i = 0;i<NUMSEVENSEGMENT;i++) {
+            for (int j = 0;j<NUMSEVENSEGPARTSDEC;j++) {
                 int bit = (int)binaryStr[k] -48;
                 sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS] = bit;
-                //cout << "" << sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTSDEC];
+              //  qDebug()<< "" << sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTSDEC];
                 k++;
             }
-            cout << "\n";
+            qDebug() << "\n";
         }
     }
     else if (!segmentHasDecimalPoint){
-        cout << "No decimal point found, 44 bits expected (42 used) \n";
-        int k = 0;
+        qDebug()  << "No decimal point found, 44 bits expected (42 used) \n";
+         k = 0;
         for (int i = 0;i<NUMSEVENSEGMENT;i++) {
             for (int j = 0;j<NUMSEVENSEGPARTS;j++) {
-                int bit = (int)binaryStr[k] - 48;
-                sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS] = bit;
-                //cout << "" << sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS];
-                k++;
-            }
-            //cout <<"\n";
+                int bit = (int)binaryStr[k++] - '0';
+                sevensegment[i][j] = bit;
+            //    qDebug() << "" << sevensegment[i][j];
+
+
+            }//k++;
+
+          // int bit = (int)binaryStr[k] - '0';
+          //  sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS] = bit;
+            //qDebug() <<"\n";
         }
     }
+    qDebug() << k;
+
+    string debug;
+
+
+    for (int i = 0;i<NUMSEVENSEGMENT;i++)
+        for (int j = 0;j<NUMSEVENSEGPARTS;j++)
+            debug.push_back(sevensegment[i][j] == true ? '1' : '0');
+
+         qDebug() << debug.c_str();
+   // qDebug() << "\n\n\n\n";
+    segChange();
 }
+
+QString getSegName(int num, int let ) {
+    QString ret;
+
+    char numc = '0'+(num); //int to ascii
+    ret = "seg";
+    ret.push_back(numc);
+    ret.push_back(SEGLETTERS[let]);
+
+    return ret;
+}
+QString getSegLetter(QString name){
+    QString ret = "image: url(:/de10rs/de10 resource/";
+    ret.push_back(name.at(4));
+    ret.push_back(".png)");
+  //  qDebug() << ret;
+    return ret;
+}
+
+
+//image: url(:/de10 resource/A.png)
+
+void MainWindow::segChange(){
+    QLabel* seg;
+    string debug;
+    for(int i = 0 ; i < NUMSEVENSEGMENT; ++i)
+        for(int j = 0 ; j < NUMSEVENSEGPARTS; ++j) {
+
+          QString name = getSegName(i+1,j);
+          seg  = this->findChild<QLabel*>(name);
+          qDebug() <<  seg;
+
+         debug.push_back(sevensegment[i][j] == true ? '1' : '0');
+
+     //    qDebug() << seg;
+
+          if(sevensegment[i][j] == true)
+            seg->setStyleSheet("");
+         else seg->setStyleSheet(getSegLetter(name)) ;
+      // else seg->setStyleSheet("image: url(:/de10rs/de10 resource/A.png)") ;
+
+
+
+    //     qDebug() << getSegLetter(name);
+
+        }
+    qDebug() << "segChange";
+    qDebug() << debug.c_str();
+    qDebug() << debug.length();
+}
+
+
 //converts hex string into binary
 string hexToBin(string hexdec)
 {
@@ -149,7 +226,7 @@ string hexToBin(string hexdec)
             hexString += "0111";
             break;
         case '8':
-            cout << "1000";
+            hexString += "1000";
             break;
         case '9':
             hexString += "1001";
@@ -179,7 +256,7 @@ string hexToBin(string hexdec)
             hexString += "1111";
             break;
         default:
-            cout << "\nInvalid hexadecimal digit "
+            qDebug() << "\nInvalid hexadecimal digit "
                  << hexdec[i];
         }
         i++;
@@ -191,7 +268,8 @@ string hexToBin(string hexdec)
  * segmentHasDecimalPoint, it sets the binarystring to give the seven segment display by converting the hex to binary.
  * Finally the updateSevenSeg method will be called and change the seven segment display state.
 */
-void hexToSegment(string hexVal){
+void MainWindow::hexToSegment(string hexVal){
+
     string binaryStr;
     regex noDecTemplate("(0x|0X)[a-fA-F0-9]{0,12}$");
     regex decTemplate("(0x|0X)[a-fA-F0-9]{0,11}$");
@@ -206,7 +284,7 @@ void hexToSegment(string hexVal){
         updateSevenSeg(binaryStr);
     }
     else{
-        cout << "hex string is invalid";
+        qDebug() << "hex string is invalid";
     }
 }
 
@@ -216,10 +294,11 @@ void MainWindow::switchFlipped(){
     QPushButton* button = (QPushButton*)sender();//sender finds the button pressed and sets it to a new QPushButton pointer
     short switchNumber = (short)button->objectName()[2].unicode() - 48; //temp
 
+  //  qDebug() << button->objectName();
     bool buttonState = switchStates[switchNumber];
     if (buttonState == true) {
         button->setStyleSheet("background-image: url(:/de10 resource/InverseSW.png);");
-        cout<<"first clause"<<endl;
+        qDebug()<<"first clause"<<"\n";
      //   qDebug() << sizeof(switchStates)/sizeof(switchStates[0]);
 
         switchStates[switchNumber] = false;
@@ -227,10 +306,13 @@ void MainWindow::switchFlipped(){
     }
     else if(buttonState == false){
         button->setStyleSheet("background-image: url(:/de10rs/de10 resource/SW.png);");
-        cout<<"second clause"<<endl;
+        qDebug()<<"second clause"<<"\n";
         switchStates[switchNumber] = true;
 
     }
+
+    ledChange(!switchStates[switchNumber], switchNumber);
+    qDebug() << switchNumber;
 
 }
 
@@ -289,6 +371,7 @@ void MainWindow::ledChange(bool newLEDState,short ledNum){
 MainWindow::~MainWindow()
 {
     delete ui;
+
 }
 
 //Sets up the MainWindow with all of the switches and buttons.
@@ -311,5 +394,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->btnkey0,SIGNAL(released()),this,SLOT(buttonReleased()));
     connect(ui->btnkey1,SIGNAL(released()),this,SLOT(buttonReleased()));
-    hexToSegment("0x0F0F0F0F0F03");
+    //hexToSegment("0x0F0F0F0F0F03");
+  // hexToSegment("0xffffffffffff");
+     hexToSegment("0x010204081020");
+ //   hexToSegment("0x000000000000");
+
+
+
+
+
 }

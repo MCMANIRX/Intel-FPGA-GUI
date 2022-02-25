@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 6.0.2, 2022-02-09T20:05:00. -->
+<!-- Written by QtCreator 6.0.2, 2022-02-24T17:01:44. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -240,13 +240,16 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/mcser/Documents/scoo/NCAT 2021-22/jckintern/DE10LITE/DE10LITE.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/mcser/Documents/scoo/NCAT 2021-22/jckintern/DE10LITE/DE10LITE.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DE10LITE2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/mcser/Documents/scoo/NCAT 2021-22/jckintern/DE10-GUI/DE10LITE.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/mcser/Documents/scoo/NCAT 2021-22/jckintern/DE10-GUI/DE10LITE.pro</value>
+    <value type="QString" key="RunConfiguration.Arguments">1 2 3</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseTerminal">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/mcser/Documents/scoo/NCAT 2021-22/jckintern/build-DE10LITE-Desktop_Qt_6_3_0_MSVC2019_64bit-Debug</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>

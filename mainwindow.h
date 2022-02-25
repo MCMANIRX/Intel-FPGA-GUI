@@ -18,7 +18,11 @@ public:
 private slots:
     void switchFlipped();
     void buttonReleased();
+    void segChange();
     void ledChange(bool newLEDState, short ledNum);
+    void updateSevenSeg(std::string binaryStr);
+    void hexToSegment(std::string hexVal);
+
 private:
     Ui::MainWindow *ui;
 };
