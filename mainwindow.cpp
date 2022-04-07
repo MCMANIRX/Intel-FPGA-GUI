@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <iostream>
 #include <sstream>
+#include <QGridLayout>
 
 using namespace std;
 // look at console.tcl - decoding
@@ -30,7 +31,10 @@ bool switchStates[NUMSWITCHES] = {};
 bool ledStates[NUMLEDS] = {};
 
 
+
 void initControls(){
+
+
 
     qDebug() << "\n" << "hello" << "\n";
       int nb;
@@ -52,6 +56,10 @@ void initControls(){
             //qDebug() << "" << sevensegment[NUMSEVENSEGMENT][NUMSEVENSEGPARTS];
         }
     }
+
+
+
+
 
 }
 
@@ -96,6 +104,7 @@ void updateLEDs(bool newLEDStates[]){
 //update sevensegment display with binary string, has if statements to account for decimal point usage
 void MainWindow::updateSevenSeg(string binaryStr){
     int k = 0;
+    qDebug() << "uss";
     qDebug() << binaryStr.c_str();
     if (segmentHasDecimalPoint) {
         qDebug() << "Decimal Point found, 48 bits expected (all used) \n";
@@ -127,7 +136,7 @@ void MainWindow::updateSevenSeg(string binaryStr){
             //qDebug() <<"\n";
         }
     }
-    qDebug() << k;
+  //  qDebug() << k;
 
     string debug;
 
@@ -136,8 +145,9 @@ void MainWindow::updateSevenSeg(string binaryStr){
         for (int j = 0;j<NUMSEVENSEGPARTS;j++)
             debug.push_back(sevensegment[i][j] == true ? '1' : '0');
 
-         qDebug() << debug.c_str();
+       // qDebug() << debug.c_str();
    // qDebug() << "\n\n\n\n";
+
     segChange();
 }
 
@@ -151,6 +161,7 @@ QString getSegName(int num, int let ) {
 
     return ret;
 }
+
 QString getSegLetter(QString name){
     QString ret = "image: url(:/de10rs/de10 resource/";
     ret.push_back(name.at(4));
@@ -163,6 +174,7 @@ QString getSegLetter(QString name){
 //image: url(:/de10 resource/A.png)
 
 void MainWindow::segChange(){
+
     QLabel* seg;
     string debug;
     for(int i = 0 ; i < NUMSEVENSEGMENT; ++i)
@@ -170,7 +182,7 @@ void MainWindow::segChange(){
 
           QString name = getSegName(i+1,j);
           seg  = this->findChild<QLabel*>(name);
-          qDebug() <<  seg;
+     //     qDebug() <<  seg;
 
          debug.push_back(sevensegment[i][j] == true ? '1' : '0');
 
@@ -186,16 +198,25 @@ void MainWindow::segChange(){
     //     qDebug() << getSegLetter(name);
 
         }
-    qDebug() << "segChange";
-    qDebug() << debug.c_str();
-    qDebug() << debug.length();
+
+    int index = 0;
+    qDebug() << "begin";
+
+    for(int i = 0; i < 8; ++i){
+       debug.push_back(sevensegment[0][index] == true ? '1' : '0');
+
+    }
+
+   qDebug() << debug.c_str();
+ ;
 }
 
 
 //converts hex string into binary
 string hexToBin(string hexdec)
 {
-    short int i = 2;
+    qDebug() << hexdec.c_str();
+    short int i = 0;
     string hexString = "";
 
     while (hexdec[i]) {
@@ -261,6 +282,8 @@ string hexToBin(string hexdec)
         }
         i++;
     }
+    qDebug() << "hex";
+    qDebug() << hexString.c_str();
     return hexString;
 }
 /*
@@ -268,6 +291,38 @@ string hexToBin(string hexdec)
  * segmentHasDecimalPoint, it sets the binarystring to give the seven segment display by converting the hex to binary.
  * Finally the updateSevenSeg method will be called and change the seven segment display state.
 */
+
+
+void MainWindow::setSegment(int segment, string value) {
+    string debug ="";
+    int index = 0 ;
+    qDebug() << value.c_str();
+    value = hexToBin(value);
+
+
+
+    for(int i = 0; i < value.length(); ++i){
+       sevensegment[segment][index++] = (value[i]-48) == 0 ? false : true;
+       debug.push_back(sevensegment[segment][index] == true ? '1' : '0');
+
+    }
+
+    debug.push_back(0x20);
+    index = 0;
+
+    for(int i = 0; i < value.length(); ++i){
+       debug.push_back(sevensegment[0][index] == true ? '1' : '0');
+
+    }
+
+    qDebug() << debug.c_str();
+    segChange();
+
+    }
+
+
+
+
 void MainWindow::hexToSegment(string hexVal){
 
     string binaryStr;
@@ -275,12 +330,12 @@ void MainWindow::hexToSegment(string hexVal){
     regex decTemplate("(0x|0X)[a-fA-F0-9]{0,11}$");
     if(regex_match(hexVal,noDecTemplate)){
         segmentHasDecimalPoint = false;
-        binaryStr = hexToBin(hexVal);
+        binaryStr = hexToBin(hexVal.erase(0,2));
         updateSevenSeg(binaryStr);
     }
     else if(regex_match(hexVal,decTemplate)){
         segmentHasDecimalPoint = true;
-        binaryStr = hexToBin(hexVal);
+        binaryStr = hexToBin(hexVal.erase(0,2));
         updateSevenSeg(binaryStr);
     }
     else{
@@ -374,10 +429,99 @@ MainWindow::~MainWindow()
 
 }
 
+
+
+void MainWindow::labelScale(QLabel* label) {
+
+
+    /*1st resize attempt*/
+
+   /*     QSize pixSize(label->width(),label->height());
+      pixSize.scale(size(), Qt::KeepAspectRatio);
+      label->setFixedSize(pixSize);*/
+
+
+
+
+    /*2nd resize attempt*/
+
+
+//label->resize(ui->centralwidget->width()-label->width(),ui->centralwidget->height()-label->height());
+
+    //    pixSize.setWidth(label->pixmap().height()-1);
+
+
+    /*misc. attempt at scaling*/
+
+     //   label->setScaledContents(true);
+    //  ui->centralwidget->setFixedSize(pixSize);
+      // label->resize(label->width()/2,label->height()/2);
+
+}
+
+QString SStoPixMap(QString txt, QString path) {
+
+    QString ret = path;
+
+   int begin = txt.indexOf("de10 resource/")+14;
+
+   while(txt.size()-begin > 2)
+       ret.append(txt.at(begin++));
+
+    qDebug() << ret;
+
+
+
+    return ret;
+}
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+   QMainWindow::resizeEvent(event);
+
+
+    QList<QLabel*> elements = this->findChildren<QLabel*>();
+
+
+   for(QLabel* element : elements){
+
+    /*attempt to edit stylesheet in resizeevent*/
+
+   //   char set[100];
+    //   char setlen = 100;
+     // snprintf(set,setlen,"height: %dpx;",5);
+    //  element->setStyleSheet(set);
+
+    labelScale(element);
+
+
+}
+
+
+
+
+
+
+}
+
+
+QString getParent(QString path, int levels) {
+
+    for(int i = 0 ; i < levels; ++i)
+    {
+        while(!path.endsWith('/') && !path.endsWith('\\'))
+            path.chop(1);
+        path.chop(1);
+    }
+
+    return path;
+
+}
+
 //Sets up the MainWindow with all of the switches and buttons.
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+
 {
     //A helpful shortcut for the arrow is to just type ui.swX which is to say ui.swX is the same as ui->swX
     ui->setupUi(this);
@@ -395,11 +539,55 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnkey0,SIGNAL(released()),this,SLOT(buttonReleased()));
     connect(ui->btnkey1,SIGNAL(released()),this,SLOT(buttonReleased()));
     //hexToSegment("0x0F0F0F0F0F03");
-  // hexToSegment("0xffffffffffff");
-     hexToSegment("0x010204081020");
- //   hexToSegment("0x000000000000");
+  /// hexToSegment("0xffffffffffff");
+    // hexToSegment("0x010204081020");
+    hexToSegment("0x000000000000");
+
+  //   setSegment(3,"00");
+  //   setSegment(1,"ea");
 
 
+
+     /*Get all label elements, use their stylesheets to set their QPixmaps as their stylesheet images, then try scaling in resizeEvent()*/
+
+
+   /*
+   QString path = QCoreApplication::applicationDirPath();
+   path =  getParent(path,2) + "/DE10-GUI/de10 resource/";
+
+
+  QList<QLabel*> elements = this->findChildren<QLabel*>();
+    for(QLabel* element : elements) {
+
+
+        qDebug() << element;
+       // QPixmap img(SStoPixMap(ui->de10->styleSheet(),path).c_str());
+
+        element->setPixmap(QPixmap(SStoPixMap(element->styleSheet(),path)));
+        element->setScaledContents(true);
+        element->show();
+
+      //  element->setStyleSheet("width: max-width; height:auto;"); //attempt at resizing via stylesheet
+    }
+
+    */
+
+
+
+
+    /*attempt to use QGridLayout to put all (or at least one) widget into a layour for simple scaling*/
+
+
+      /*  QGridLayout *layout = new QGridLayout(ui->centralwidget);
+        QWidget* widget = new QWidget(this);
+        layout->setSpacing(6);
+
+        layout->addWidget(ui->centralwidget, 0, 0, 1, 1);
+        layout->addWidget(widget, 0, 0, 1, 1); //<--or whatever you need
+        setLayout(layout);
+
+
+        */
 
 
 
